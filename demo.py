@@ -21,9 +21,15 @@ peer_id = "-UT3200-abcdefghijkl"
 key = "AAAAAAAA"
 listen_port = 18888
 
-@tornado.gen.coroutine
+@gen.coroutine
 def handle_request(request):
     uri = request.uri
+    if(uri.find('/announce?') == -1):
+        ret = 'It\'s work!'
+        request.write('HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s' % (
+            len(ret), ret)
+        )
+        
     uri = '?passkey=' + passkey + '&' + uri.replace('/announce?','').replace('/?','')
 
     result = re.findall('peer_id=.*?&', uri)
@@ -50,7 +56,7 @@ def handle_request(request):
             len(ret), ret)
         )
     finally:
-        http_client.close()
+        #http_client.close()
         request.finish()
         
     print "Request:" + "\r\n" + request.uri + "\r\n"
