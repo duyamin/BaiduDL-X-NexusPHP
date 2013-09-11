@@ -29,6 +29,8 @@ def handle_request(request):
         request.write('HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s' % (
             len(ret), ret)
         )
+        request.finish()
+        return
         
     uri = '?passkey=' + passkey + '&' + uri.replace('/announce?','').replace('/?','')
 
@@ -56,7 +58,6 @@ def handle_request(request):
             len(ret), ret)
         )
     finally:
-        #http_client.close()
         request.finish()
         
     print "Request:" + "\r\n" + request.uri + "\r\n"
